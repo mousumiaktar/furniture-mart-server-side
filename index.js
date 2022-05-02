@@ -30,6 +30,7 @@ async function run() {
         await client.connect();
         const inventoryCollection = client.db('furnitureMart').collection('inventory');
 
+
         app.get('/inventory', async(req, res) => {
             const query = {};
             const cursor = inventoryCollection.find(query);
@@ -49,6 +50,14 @@ async function run() {
         app.post('/inventory', async(req, res) =>{
             const newInventory = req.body;
             const result = await inventoryCollection.insertOne(newInventory);
+            res.send(result);
+        })
+
+
+        app.delete('/inventory/:id', async(req, res) =>{
+            const id = req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await inventoryCollection.deleteOne(query);
             res.send(result);
         })
 
