@@ -8,7 +8,13 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // middleware
-app.use(cors());
+// app.use(cors());
+const corsOptions = {
+    origin: 'http://localhost:3000',
+    credentials: true,            //access-control-allow-credentials:true
+    optionSuccessStatus: 200
+}
+app.use(cors(corsOptions));
 app.use(express.json());
 
 function verifyJWT(req, res, next) {
@@ -28,7 +34,7 @@ function verifyJWT(req, res, next) {
 }
 
 
-var uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-shard-00-00.g5v7d.mongodb.net:27017,cluster0-shard-00-01.g5v7d.mongodb.net:27017,cluster0-shard-00-02.g5v7d.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-h4324x-shard-0&authSource=admin&retryWrites=true&w=majority`;
+const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-shard-00-00.g5v7d.mongodb.net:27017,cluster0-shard-00-01.g5v7d.mongodb.net:27017,cluster0-shard-00-02.g5v7d.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-h4324x-shard-0&authSource=admin&retryWrites=true&w=majority`;
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -109,8 +115,8 @@ async function run() {
                 const inventories = await cursor.toArray();
                 res.send(inventories);
             }
-            else{
-                res.status(403).send({message: 'forbidden access'})
+            else {
+                res.status(403).send({ message: 'forbidden access' })
             }
         })
 
